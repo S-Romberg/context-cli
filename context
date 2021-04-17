@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require 'thor'
@@ -11,13 +12,20 @@ class ContextCLI < Thor
   desc 'add CONTEXT', 'create a new context'
   option new: :boolean
   option n: :boolean
+  option add: :boolean
+  option a: :boolean
   def context(*args)
     name = args.shift
     if options[:new] || options[:n]
       create_new_context(name)
-    else
+      nil
+    elsif options[:add] || options[:a]
       File.open("#{name}.md")
       add_to_context(name, args)
+      nil
+    else
+      File.foreach("#{name}.md") { |line| puts line }
+      nil
     end
   rescue Errno::ENOENT
     create_new_context(name, args)
