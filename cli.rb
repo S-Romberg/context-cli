@@ -6,13 +6,7 @@ require 'pry'
 class ContextCLI < Thor
   # store different context (file for now)
   # add different notes to context
-  # user can select a contect and then type out a note
-
-  desc 'hello NAME', 'say hello to NAME'
-  def hello(name, from = nil)
-    puts "from: #{from}" if from
-    puts "Hello #{name}"
-  end
+  # user can select a context and then type out a note
 
   desc 'add CONTEXT', 'create a new context'
   option new: :boolean
