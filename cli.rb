@@ -32,8 +32,10 @@ class ContextCLI < Thor
   end
 
   def add_to_context(name, args)
-    File.write("#{name}.md", '* ' + args.join(' ') + '/', mode: 'a')
-    puts "Added '#{args.join(' ')}' to context #{name}"
+    File.open("#{name}.md", 'a') do |file|
+      file.puts('* ' + args.join(' '))
+      puts "Added '#{args.join(' ')}' to context #{name}"
+    end
   end
 end
 
