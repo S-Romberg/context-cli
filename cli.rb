@@ -21,28 +21,25 @@ class ContextCLI < Thor
     name = args.shift
     if options[:new] || options[:n]
       create_new_context(name)
-      add_to_context(name, args)
     else
       File.open("#{name}.md")
       add_to_context(name, args)
     end
-  rescue Errno::ENOENT => e
-    create_new_context(name)
-    add_to_context(name, args)
-  rescue StandardError => e
-    puts 'Something went wrong'
+  rescue Errno::ENOENT
+    create_new_context(name, args)
   end
 
   private
 
-  def create_new_context(name)
+  def create_new_context(name, args)
     File.new("#{name}.md", 'w')
     puts "Created context #{name}"
+    add_to_context(name, args)
   end
 
   def add_to_context(name, args)
-    File.write("#{name}.md", '\n' + args.join(' '), mode: 'a')
-    puts "Added #{args.join(' ')} to context #{name}"
+    File.write("#{name}.md", '* ' + args.join(' ') + '/', mode: 'a')
+    puts "Added '#{args.join(' ')}' to context #{name}"
   end
 end
 
