@@ -15,19 +15,28 @@ class ContextCLI < Thor
   end
 
   desc 'add CONTEXT', 'create a new context'
-  option :new
+  option :new => :boolean
+  option :n => :boolean
   def context(*args)
     name = args.shift
-    if options[:new]
-      puts "Creating context #{name}"
+    if options[:new] || options[:n]
       File.new("#{name}.md", 'w')
+      puts "Created context #{name}"
       File.write("#{name}.md", '\n' + args.join(' '), mode: 'a')
+      puts "Added #{args.join(' ')} to context #{name}"
     else
       File.open("#{name}.md")
-      puts "Updating context #{name}"
       File.write("#{name}.md", '\n' + args.join(' '), mode: 'a')
+      puts "Added #{args.join(' ')} to context #{name}"
     end
-  rescue StandardError
+  rescue Errno::ENOENT => e
+    File.new("#{name}.md", 'w')
+    puts "Creating context #{name}"
+    File.write("#{name}.md", '\n' + args.join(' '), mode: 'a')
+    puts "Added #{args.join(' ')} to context #{name}"
+  rescue StandardError => e
+    binding.pry
+    puts e
     puts 'Something went wrong'
   end
 end
